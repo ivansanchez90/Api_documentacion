@@ -1,9 +1,9 @@
 import { pool } from "../db.js"
 
 
-export const getQuienEntrega = async (req, res) => {
+export const getQuienRecibe = async (req, res) => {
     try {
-        const [rows] = await pool.query('SElECT * FROM quienentrega')
+        const [rows] = await pool.query('SElECT * FROM quienrecibe')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({
@@ -12,11 +12,11 @@ export const getQuienEntrega = async (req, res) => {
     }
 }
 
-export const getQuienEntregaId = async (req, res) => {
+export const getQuienRecibeId = async (req, res) => {
     try {
-        const [rows] = await pool.query('SElECT * FROM quienentrega where quienEntregaid = ?', [req.params.id])
+        const [rows] = await pool.query('SElECT * FROM quienrecibe where quienRecibeid = ?', [req.params.id])
         if (rows.length <= 0) return res.status(404).json({
-            message: 'No existe quienEntrega con ese ID'
+            message: 'No existe quienRecibe con ese ID'
         })
         res.json(rows[0])
     } catch (error) {
@@ -26,10 +26,10 @@ export const getQuienEntregaId = async (req, res) => {
     }
 }
 
-export const createQuienEntrega = async (req, res) => {
+export const createQuienRecibe = async (req, res) => {
     try {
         const { nombre, dni, telefono, correo } = req.body
-        const [rows] = await pool.query('INSERT INTO quienentrega (nombre, dni, telefono, correo) VALUES (?, ?)', [nombre, dni, telefono, correo,])
+        const [rows] = await pool.query('INSERT INTO quienrecibe (nombre, dni, telefono, correo) VALUES (?, ?)', [nombre, dni, telefono, correo,])
         res.send({
             id: rows.insertId,
             nombre,
@@ -42,15 +42,15 @@ export const createQuienEntrega = async (req, res) => {
     }
 }
 
-export const updateQuienEntrega = async (req, res) => {
+export const updateQuienRecibe = async (req, res) => {
     try {
         const { id } = req.params
         const { nombre, dni, telefono, correo } = req.body
-        const [result] = await pool.query('UPDATE quienentrega SET nombre = IFNULL(?,nombre), dni = IFNULL(?,dni), telefono = IFNULL(?,telefono), correo = IFNULL(?,correo) WHERE quienEntregaid = ?', [nombre, dni, telefono, correo, id])
+        const [result] = await pool.query('UPDATE quienrecibe SET nombre = IFNULL(?,nombre), dni = IFNULL(?,dni), telefono = IFNULL(?,telefono), correo = IFNULL(?,correo) WHERE quienRecibeid = ?', [nombre, dni, telefono, correo, id])
         if (result.affectedRows <= 0) return send.status(404).json({
-            message: 'No existe quienEntrega con ese ID'
+            message: 'No existe quienRecibe con ese ID'
         })
-        const [rows] = await pool.query('SELECT * FROM quienentrega WHERE quienEntregaid = ?', [id])
+        const [rows] = await pool.query('SELECT * FROM quienrecibe WHERE quienRecibeid = ?', [id])
         res.json(rows[0])
     } catch (error) {
         return res.status(500).json({
@@ -59,12 +59,12 @@ export const updateQuienEntrega = async (req, res) => {
     }
 }
 
-export const deleteQuienEntrega = async (req, res) => {
+export const deleteQuienRecibe = async (req, res) => {
     try {
-        const [result] = await pool.query('DELETE FROM quienentrega WHERE quienEntregaid = ?', [req.params.id])
+        const [result] = await pool.query('DELETE FROM quienrecibe WHERE quienRecibeid = ?', [req.params.id])
 
         if (result.affectedRows === 0) return res.status(404).json({
-            message: 'No existe quienEntrega con ese ID'
+            message: 'No existe quienRecibe con ese ID'
         })
 
         res.sendStatus(204)
